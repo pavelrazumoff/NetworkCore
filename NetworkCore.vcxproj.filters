@@ -28,6 +28,12 @@
     <Filter Include="Source Files\Socket">
       <UniqueIdentifier>{59df335d-b576-40f0-a4fb-03c8f3c20fc0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Replication">
+      <UniqueIdentifier>{37c6925d-abfd-4347-b20a-de0e70d74678}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Replication">
+      <UniqueIdentifier>{74afcb79-44bd-4b98-9f96-27854c457ec5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -43,9 +49,6 @@
       <Filter>Header Files\ReflectionSystem</Filter>
     </ClInclude>
     <ClInclude Include="Serialization\ByteSwap.h">
-      <Filter>Header Files\Serialization</Filter>
-    </ClInclude>
-    <ClInclude Include="Serialization\LinkingContext.h">
       <Filter>Header Files\Serialization</Filter>
     </ClInclude>
     <ClInclude Include="Serialization\MemoryBitStream.h">
@@ -74,6 +77,24 @@
     </ClInclude>
     <ClInclude Include="NetworkCore.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReflectionSystem\LinkingContext.h">
+      <Filter>Header Files\ReflectionSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Replication\ObjectCreationRegistry.h">
+      <Filter>Header Files\Replication</Filter>
+    </ClInclude>
+    <ClInclude Include="Replication\ReplicationObject.h">
+      <Filter>Header Files\Replication</Filter>
+    </ClInclude>
+    <ClInclude Include="Replication\ReplicationHeader.h">
+      <Filter>Header Files\Replication</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkUtility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Replication\ReplicationManager.h">
+      <Filter>Header Files\Replication</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +127,15 @@
     </ClCompile>
     <ClCompile Include="NetworkCore.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Replication\ReplicationHeader.cpp">
+      <Filter>Source Files\Replication</Filter>
+    </ClCompile>
+    <ClCompile Include="Replication\ReplicationManager.cpp">
+      <Filter>Source Files\Replication</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

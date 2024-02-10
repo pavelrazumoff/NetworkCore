@@ -3,6 +3,7 @@
 #include "NetworkCore.h"
 
 #include "WinSock2.h"
+
 #include <memory>
 #include <string>
 
@@ -43,8 +44,6 @@ private:
 	friend class TCPSocket;
 
 	sockaddr mSockAddr;
-
-	std::string savedAddress;
 };
 
 typedef std::shared_ptr<SocketAddress> SocketAddressPtr;

@@ -3,14 +3,7 @@
 #include "MemoryStream.h"
 #include "minwindef.h"
 
-#include "LinkingContext.h"
-
-bool IsPlatformLittleEndian()
-{
-	uint16_t number = 0x1;
-	char* numPtr = reinterpret_cast<char*>(&number);
-	return (numPtr[0] == 1);
-}
+//#include "LinkingContext.h"
 
 bool MemoryStream::ReallocBuffer(uint32_t inNewLength)
 {
@@ -55,7 +48,7 @@ bool OutputMemoryStream::Serialize(std::string& ioStr)
 
 	return true;
 }
-
+/*
 bool OutputMemoryStream::Serialize(ChatCustomObject*& ioChatObject)
 {
 	if (!mLinkingContext)
@@ -67,7 +60,7 @@ bool OutputMemoryStream::Serialize(ChatCustomObject*& ioChatObject)
 	uint32_t networkId = mLinkingContext->GetNetworkId(ioChatObject);
 	return MemoryStream::Serialize(networkId);
 }
-
+*/
 // ---------------------------------------------------------------------------
 
 bool InputMemoryStream::Read(void* outData, uint32_t outByteCount)
@@ -95,7 +88,7 @@ bool InputMemoryStream::Serialize(std::string& ioStr)
 
 	return true;
 }
-
+/*
 bool InputMemoryStream::Serialize(ChatCustomObject*& ioChatObject)
 {
 	if (!mLinkingContext)
@@ -111,7 +104,7 @@ bool InputMemoryStream::Serialize(ChatCustomObject*& ioChatObject)
 
 	return true;
 }
-
+*/
 void InputMemoryStream::Reset()
 {
 	mHead = 0;

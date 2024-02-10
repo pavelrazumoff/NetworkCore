@@ -3,7 +3,68 @@
 #include "MemoryBitStream.h"
 #include "minwindef.h"
 
-void OutputMemoryBitStream::WriteBits(uint8_t inData, size_t inBitCount)
+bool MemoryBitStream::Serialize(void* inData, uint32_t inBitCount)
+{
+	uint8_t* srcByte = static_cast<uint8_t*>(inData);
+
+	while (inBitCount > 8)
+	{
+		Serialize(*srcByte, 8);
+		++srcByte;
+		inBitCount -= 8;
+	}
+
+	if (inBitCount > 0)
+		Serialize(*srcByte, inBitCount);
+
+	return true;
+}
+
+void MemoryBitStream::ReallocBuffer(uint32_t inNewBitCapacity)
+{
+	if (mBuffer == nullptr)
+	{
+		mBuffer = static_cast<char*>(std::malloc(inNewBitCapacity >> 3));
+		if (mBuffer)
+			memset(mBuffer, 0, inNewBitCapacity >> 3);
+		else
+		{
+			// TODO: Handle error.
+			DebugNetworkTrap();
+		}
+	}
+	else
+	{
+		char* tempBuffer = static_cast<char*>(std::malloc(inNewBitCapacity >> 3));
+		if (tempBuffer)
+		{
+			memset(tempBuffer, 0, inNewBitCapacity >> 3);
+			memcpy(tempBuffer, mBuffer, mBitCapacity >> 3);
+			std::free(mBuffer);
+			mBuffer = tempBuffer;
+		}
+		else
+		{
+			// TODO: Handle error.
+			DebugNetworkTrap();
+		}
+	}
+
+	mBitCapacity = inNewBitCapacity;
+}
+
+// ---------------------------------------------------------------------------
+
+bool OutputMemoryBitStream::Serialize(std::string& str)
+{
+	uint32_t strLen = (uint32_t)str.length();
+	if (!Serialize(strLen)) return false;
+	if (!Serialize(&str.front(), strLen)) return false;
+
+	return true;
+}
+
+bool OutputMemoryBitStream::WriteBits(uint8_t inData, uint32_t inBitCount)
 {
 	uint32_t nextBitHead = mBitHead + static_cast<uint32_t>(inBitCount);
 	if (nextBitHead > mBitCapacity)
@@ -26,52 +87,44 @@ void OutputMemoryBitStream::WriteBits(uint8_t inData, size_t inBitCount)
 	}
 
 	mBitHead = nextBitHead;
+
+	return true;
 }
 
-void OutputMemoryBitStream::WriteBits(const void* inData, size_t inBitCount)
+// ---------------------------------------------------------------------------
+
+bool InputMemoryBitStream::Serialize(std::string& str)
 {
-	const char* srcByte = static_cast<const char*>(inData);
+	uint32_t strLen;
+	if (!Serialize(strLen)) return false;
 
-	while (inBitCount > 8)
-	{
-		WriteBits(*srcByte, 8);
-		++srcByte;
-		inBitCount -= 8;
-	}
+	str.resize(strLen);
+	if (!Serialize(&str.front(), strLen)) return false;
 
-	if (inBitCount > 0)
-		WriteBits(*srcByte, inBitCount);
+	return true;
 }
 
-void OutputMemoryBitStream::ReallocBuffer(uint32_t inNewBitCapacity)
+bool InputMemoryBitStream::ReadBits(uint8_t& outData, uint32_t inBitCount)
 {
-	if (!mBuffer)
+	uint32_t byteOffset = mBitHead >> 3;
+	uint32_t bitOffset = mBitHead & 0x7;
+
+	outData = static_cast<uint8_t>(mBuffer[byteOffset]) >> bitOffset;
+
+	uint32_t bitsFreeThisByte = 8 - bitOffset;
+	if (bitsFreeThisByte < inBitCount)
 	{
-		mBuffer = static_cast<char*>(std::malloc(inNewBitCapacity >> 3));
-		if (mBuffer)
-			memset(mBuffer, 0, inNewBitCapacity >> 3);
-		else
-		{
-			// TODO: Handle error.
-			return;
-		}
-	}
-	else
-	{
-		char* tempBuffer = static_cast<char*>(std::malloc(inNewBitCapacity >> 3));
-		if (tempBuffer)
-		{
-			memset(tempBuffer, 0, inNewBitCapacity >> 3);
-			memcpy(tempBuffer, mBuffer, mBitCapacity >> 3);
-			std::free(mBuffer);
-			mBuffer = tempBuffer;
-		}
-		else
-		{
-			// TODO: Handle error.
-			return;
-		}
+		outData |= static_cast<uint8_t>(mBuffer[byteOffset + 1]) << bitsFreeThisByte;
 	}
 
-	mBitCapacity = inNewBitCapacity;
+	outData &= (~(0x00ff << inBitCount));
+
+	mBitHead += inBitCount;
+
+	return true;
+}
+
+void InputMemoryBitStream::Reset()
+{
+	mBitHead = 0;
 }

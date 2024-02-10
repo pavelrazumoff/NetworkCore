@@ -6,7 +6,7 @@
 class SocketAddressFactory
 {
 public:
-	static SocketAddressPtr CreateIPFromString(const std::string& inString, SocketAddressFamily family = INET)
+	static SocketAddressPtr CreateIPv4FromString(const std::string& inString)
 	{
 		using namespace std;
 
@@ -26,7 +26,7 @@ public:
 
 		addrinfo hint;
 		memset(&hint, 0, sizeof(hint));
-		hint.ai_family = family;
+		hint.ai_family = INET;
 
 		addrinfo* result;
 		int error = getaddrinfo(host.c_str(), service.c_str(),
