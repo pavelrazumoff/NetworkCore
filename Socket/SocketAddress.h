@@ -34,6 +34,8 @@ public:
 
 	bool operator==(const SocketAddress& other) const;
 
+	const sockaddr& GetAsSockAddr() const { return mSockAddr; }
+
 private:
 	sockaddr_in* GetAsSockAddrIn() { return reinterpret_cast<sockaddr_in*>(&mSockAddr); }
 	const sockaddr_in* GetAsSockAddrIn() const { return reinterpret_cast<const sockaddr_in*>(&mSockAddr); }
