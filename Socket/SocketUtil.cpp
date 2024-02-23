@@ -24,6 +24,8 @@ TCPSocketPtr SocketUtil::CreateTCPSocket(SocketAddressFamily inFamily)
 
 void SocketUtil::ReportError(const wchar_t* inOperationDesc)
 {
+	// TODO: Once we call the GetLastError() here, it will reset the error code, so we should call it only once.
+	/*
 	#if _WIN32
 	LPVOID lpMsgBuf;
 	DWORD errorNum = GetLastError();
@@ -43,6 +45,7 @@ void SocketUtil::ReportError(const wchar_t* inOperationDesc)
 	#else
 	//LOG( "Error: %hs", inOperationDesc );
 	#endif
+	*/
 }
 
 int SocketUtil::GetLastError()
