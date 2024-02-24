@@ -106,6 +106,8 @@ bool InputMemoryBitStream::Serialize(std::string& str)
 
 bool InputMemoryBitStream::ReadBits(uint8_t& outData, uint32_t inBitCount)
 {
+	if (mBitHead + inBitCount >= mBitCapacity) return false;
+
 	uint32_t byteOffset = mBitHead >> 3;
 	uint32_t bitOffset = mBitHead & 0x7;
 

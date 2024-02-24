@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "ReplicationManager.h"
+#include "RPCManager.h"
 
 #include "ReplicationHeader.h"
 #include "ObjectCreationRegistry.h"
@@ -57,8 +58,10 @@ void ReplicationManager::ReplicateDestroy(OutputMemoryBitStream& outStream, IRep
 	rh.Write(outStream);
 }
 
-void ReplicationManager::ProcessReplicationAction(InputMemoryBitStream& inStream)
+void ReplicationManager::ProcessReplicationAction(ObjectCreationRegistry* registry, InputMemoryBitStream& inStream)
 {
+	if (!registry) { DebugNetworkTrap(); return; }
+
 	ReplicationHeader rh;
 	rh.Read(inStream);
 
@@ -67,7 +70,7 @@ void ReplicationManager::ProcessReplicationAction(InputMemoryBitStream& inStream
 		case RA_Create:
 			{
 				if (IReplicationObject* replObject =
-					ObjectCreationRegistry::GetInstance().CreateReplicationObject(rh.classId))
+					registry->CreateReplicationObject(rh.classId))
 				{
 					linkingContext->AddReplicationObject(replObject, rh.networkId);
 					replObject->Read(inStream);
@@ -84,7 +87,7 @@ void ReplicationManager::ProcessReplicationAction(InputMemoryBitStream& inStream
 				}
 				else
 				{
-					replObject = ObjectCreationRegistry::GetInstance().CreateReplicationObject(rh.classId);
+					replObject = registry->CreateReplicationObject(rh.classId);
 
 					if (replObject)
 					{
@@ -105,9 +108,24 @@ void ReplicationManager::ProcessReplicationAction(InputMemoryBitStream& inStream
 				}
 			}
 			break;
+		case RA_RPC:
+			{
+				RPCManager::GetInstance().ProcessRPC(inStream);
+			}
+			break;
 		default:
 			break;
 	}
+}
+
+uint32_t ReplicationManager::GetNetworkIdForObject(IReplicationObject* obj) const
+{
+	return linkingContext->GetNetworkId(obj);
+}
+
+IReplicationObject* ReplicationManager::GetObjectFromNetworkId(uint32_t networkId) const
+{
+	return linkingContext->GetReplicationObject(networkId);
 }
 
 // --------------------------------------------------------------------

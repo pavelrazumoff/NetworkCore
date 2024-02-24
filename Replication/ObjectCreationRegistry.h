@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ReplicationObject.h"
+#include "NetworkUtility.h"
 
 #include <unordered_map>
 
@@ -21,10 +22,12 @@ public:
 	template <class T>
 	void RegisterCreationFunction()
 	{
-		_ASSERT(objClassIdToCreationFuncMap.find(T::kClassId) ==
-			objClassIdToCreationFuncMap.end());
-
-		objClassIdToCreationFuncMap[T::kClassId] = T::CreateReplicationInstance;
+		if (objClassIdToCreationFuncMap.find(T::kClassId) == objClassIdToCreationFuncMap.end())
+		{
+			objClassIdToCreationFuncMap[T::kClassId] = T::CreateReplicationInstance;
+		}
+		else
+			DebugNetworkTrap();
 	}
 
 	IReplicationObject* CreateReplicationObject(uint32_t inClassId)

@@ -133,6 +133,8 @@ public:
 
 public:
 	virtual bool IsInput() const override { return true; }
+	uint32_t GetBitCapacityLeft() const { return mBitCapacity - mBitHead; }
+	uint32_t GetByteCapacityLeft() const { return GetBitCapacityLeft() >> 3; }
 
 	void Reset();
 };

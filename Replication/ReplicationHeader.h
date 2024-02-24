@@ -10,14 +10,16 @@ enum ReplicationAction
 	RA_Update,
 	RA_Destroy,
 
+	RA_RPC,
+
 	RA_MAX,
 };
 
-class ReplicationHeader
+class NETWORKCORE_API ReplicationHeader
 {
 public:
 	ReplicationHeader() {}
-	ReplicationHeader(ReplicationAction _action, uint32_t _networkId, uint32_t _classId = 0) :
+	ReplicationHeader(ReplicationAction _action, uint32_t _networkId = 0, uint32_t _classId = 0) :
 		action(_action), networkId(_networkId), classId(_classId) {}
 
 	void Write(OutputMemoryBitStream& outStream);
