@@ -12,6 +12,7 @@ enum ReplicationAction
 
 	RA_RPC,
 
+	RA_Padding,
 	RA_MAX,
 };
 

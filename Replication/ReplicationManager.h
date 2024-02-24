@@ -19,6 +19,8 @@ public:
 	void ReplicateUpdate(OutputMemoryBitStream& outStream, IReplicationObject* replObject);
 	void ReplicateDestroy(OutputMemoryBitStream& outStream, IReplicationObject* replObject);
 
+	void CloseReplicationPackage(OutputMemoryBitStream& outStream);
+
 	void ProcessReplicationAction(ObjectCreationRegistry* registry, InputMemoryBitStream& inStream);
 
 	uint32_t GetNetworkIdForObject(IReplicationObject* obj) const;

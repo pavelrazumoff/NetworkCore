@@ -58,6 +58,15 @@ void ReplicationManager::ReplicateDestroy(OutputMemoryBitStream& outStream, IRep
 	rh.Write(outStream);
 }
 
+void ReplicationManager::CloseReplicationPackage(OutputMemoryBitStream& outStream)
+{
+	if (outStream.GetBitLength() % 8 != 0)
+	{
+		ReplicationAction action = RA_Padding;
+		outStream.Serialize(action);
+	}
+}
+
 void ReplicationManager::ProcessReplicationAction(ObjectCreationRegistry* registry, InputMemoryBitStream& inStream)
 {
 	if (!registry) { DebugNetworkTrap(); return; }
@@ -111,6 +120,13 @@ void ReplicationManager::ProcessReplicationAction(ObjectCreationRegistry* regist
 		case RA_RPC:
 			{
 				RPCManager::GetInstance().ProcessRPC(inStream);
+			}
+			break;
+		case RA_Padding:
+			while (inStream.GetBitCapacityLeft() > 0)
+			{
+				bool paddingBit;
+				inStream.Serialize(paddingBit);
 			}
 			break;
 		default:
