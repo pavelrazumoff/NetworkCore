@@ -2,6 +2,7 @@
 
 #include "ReplicationManager.h"
 #include "RPCManager.h"
+#include "RMIManager.h"
 
 #include "ReplicationHeader.h"
 #include "ObjectCreationRegistry.h"
@@ -9,9 +10,6 @@
 #include "ReflectionSystem/DataType.h"
 
 #include "NetworkUtility.h"
-
-static void SerializeData(MemoryBitStream& stream, const DataType* inDataType,
-	uint8_t* inData, uint64_t inProperties);
 
 ReplicationManager::ReplicationManager()
 {
@@ -122,6 +120,15 @@ void ReplicationManager::ProcessReplicationAction(ObjectCreationRegistry* regist
 				RPCManager::GetInstance().ProcessRPC(inStream);
 			}
 			break;
+		case RA_RMI:
+			{
+				if (IReplicationObject* replMethodOwner =
+					linkingContext->GetReplicationObject(rh.networkId))
+				{
+					RMIManager::GetInstance().ProcessRMI(inStream, replMethodOwner);
+				}
+			}
+			break;
 		case RA_Padding:
 			while (inStream.GetBitCapacityLeft() > 0)
 			{
@@ -142,39 +149,4 @@ uint32_t ReplicationManager::GetNetworkIdForObject(IReplicationObject* obj) cons
 IReplicationObject* ReplicationManager::GetObjectFromNetworkId(uint32_t networkId) const
 {
 	return linkingContext->GetReplicationObject(networkId);
-}
-
-// --------------------------------------------------------------------
-
-void SerializeData(MemoryBitStream& stream, const DataType* inDataType, uint8_t* inData, uint64_t inProperties)
-{
-	stream.Serialize(inProperties);
-
-	const auto& mvs = inDataType->GetMemberVariables();
-	for (int mvIndex = 0, c = mvs.size(); mvIndex < c; ++mvIndex)
-	{
-		if (((1 << mvIndex) & inProperties) != 0)
-		{
-			const auto& mv = mvs[mvIndex];
-			void* mvData = inData + mv.GetOffset();
-
-			switch (mv.GetPrimitiveType())
-			{
-				case EPrimitiveType::EPT_Int:
-					stream.Serialize(*reinterpret_cast<int*>(mvData));
-					break;
-				case EPrimitiveType::EPT_Float:
-					stream.Serialize(*reinterpret_cast<float*>(mvData));
-					break;
-				case EPrimitiveType::EPT_Bool:
-					stream.Serialize(*reinterpret_cast<bool*>(mvData));
-					break;
-				case EPrimitiveType::EPT_String:
-					stream.Serialize(*reinterpret_cast<std::string*>(mvData));
-					break;
-				default:
-					break;
-			}
-		}
-	}
 }

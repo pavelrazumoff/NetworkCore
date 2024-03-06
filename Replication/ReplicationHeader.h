@@ -11,6 +11,7 @@ enum ReplicationAction
 	RA_Destroy,
 
 	RA_RPC,
+	RA_RMI,
 
 	RA_Padding,
 	RA_MAX,

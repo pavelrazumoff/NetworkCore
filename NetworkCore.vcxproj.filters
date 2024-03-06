@@ -99,6 +99,9 @@
     <ClInclude Include="Replication\RPCManager.h">
       <Filter>Header Files\Replication</Filter>
     </ClInclude>
+    <ClInclude Include="Replication\RMIManager.h">
+      <Filter>Header Files\Replication</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -141,6 +144,9 @@
       <Filter>Source Files\Replication</Filter>
     </ClCompile>
     <ClCompile Include="Replication\RPCManager.cpp">
+      <Filter>Source Files\Replication</Filter>
+    </ClCompile>
+    <ClCompile Include="Replication\RMIManager.cpp">
       <Filter>Source Files\Replication</Filter>
     </ClCompile>
   </ItemGroup>

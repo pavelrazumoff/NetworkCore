@@ -162,6 +162,7 @@
     <ClInclude Include="Replication\ReplicationHeader.h" />
     <ClInclude Include="Replication\ReplicationManager.h" />
     <ClInclude Include="Replication\ReplicationObject.h" />
+    <ClInclude Include="Replication\RMIManager.h" />
     <ClInclude Include="Replication\RPCManager.h" />
     <ClInclude Include="Serialization\ByteSwap.h" />
     <ClInclude Include="Serialization\MemoryBitStream.h" />
@@ -185,6 +186,7 @@
     </ClCompile>
     <ClCompile Include="Replication\ReplicationHeader.cpp" />
     <ClCompile Include="Replication\ReplicationManager.cpp" />
+    <ClCompile Include="Replication\RMIManager.cpp" />
     <ClCompile Include="Replication\RPCManager.cpp" />
     <ClCompile Include="Serialization\MemoryBitStream.cpp" />
     <ClCompile Include="Serialization\MemoryStream.cpp" />

@@ -57,9 +57,9 @@ void MemoryBitStream::ReallocBuffer(uint32_t inNewBitCapacity)
 
 bool OutputMemoryBitStream::Serialize(std::string& str)
 {
-	uint32_t strLen = (uint32_t)str.length();
-	if (!Serialize(strLen)) return false;
-	if (!Serialize(&str.front(), strLen)) return false;
+	uint32_t strBitLen = (uint32_t)str.length() << 3;
+	if (!Serialize(strBitLen)) return false;
+	if (!Serialize(&str.front(), strBitLen)) return false;
 
 	return true;
 }
@@ -95,11 +95,11 @@ bool OutputMemoryBitStream::WriteBits(uint8_t inData, uint32_t inBitCount)
 
 bool InputMemoryBitStream::Serialize(std::string& str)
 {
-	uint32_t strLen;
-	if (!Serialize(strLen)) return false;
+	uint32_t strBitLen;
+	if (!Serialize(strBitLen)) return false;
 
-	str.resize(strLen);
-	if (!Serialize(&str.front(), strLen)) return false;
+	str.resize(strBitLen >> 3);
+	if (!Serialize(&str.front(), strBitLen)) return false;
 
 	return true;
 }

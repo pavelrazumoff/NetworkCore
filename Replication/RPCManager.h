@@ -10,9 +10,10 @@ typedef void (*RPCFunction)(InputMemoryBitStream&);
 
 class NETWORKCORE_API RPCManager
 {
-public:
+private:
 	RPCManager();
 
+public:
 	static RPCManager& GetInstance();
 
 public:

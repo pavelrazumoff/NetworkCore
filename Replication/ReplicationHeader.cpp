@@ -10,7 +10,7 @@ void ReplicationHeader::Write(OutputMemoryBitStream& outStream)
 	if (action == RA_RPC) return;
 
 	outStream.Serialize(networkId);
-	if (action != RA_Destroy)
+	if (action == RA_Create || action == RA_Update)
 		outStream.Serialize(classId);
 }
 
@@ -21,6 +21,6 @@ void ReplicationHeader::Read(InputMemoryBitStream& inStream)
 	if (action == RA_RPC) return;
 
 	inStream.Serialize(networkId);
-	if (action != RA_Destroy)
+	if (action == RA_Create || action == RA_Update)
 		inStream.Serialize(classId);
 }
