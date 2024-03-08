@@ -8,6 +8,8 @@ class IReplicationObject
 public:
 	virtual uint32_t GetClassId() const = 0;
 
+	virtual void PostReplCreate() {}
+
 	virtual void Write(OutputMemoryBitStream& outStream) = 0;
 	virtual void Read(InputMemoryBitStream& inStream) = 0;
 

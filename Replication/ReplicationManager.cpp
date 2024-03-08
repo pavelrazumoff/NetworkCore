@@ -81,6 +81,8 @@ void ReplicationManager::ProcessReplicationAction(ObjectCreationRegistry* regist
 				{
 					linkingContext->AddReplicationObject(replObject, rh.networkId);
 					replObject->Read(inStream);
+
+					replObject->PostReplCreate();
 				}
 				else DebugNetworkTrap();
 			}
