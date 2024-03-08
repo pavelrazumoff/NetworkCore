@@ -136,5 +136,5 @@ public:
 	uint32_t GetBitCapacityLeft() const { return mBitCapacity - mBitHead; }
 	uint32_t GetByteCapacityLeft() const { return GetBitCapacityLeft() >> 3; }
 
-	void Reset();
+	void Reset(uint32_t newByteCount = 0);
 };

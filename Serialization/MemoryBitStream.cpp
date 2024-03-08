@@ -126,7 +126,12 @@ bool InputMemoryBitStream::ReadBits(uint8_t& outData, uint32_t inBitCount)
 	return true;
 }
 
-void InputMemoryBitStream::Reset()
+void InputMemoryBitStream::Reset(uint32_t newByteCount)
 {
 	mBitHead = 0;
+	if (newByteCount > 0)
+	{
+		std::free(mBuffer); mBuffer = nullptr;
+		ReallocBuffer(newByteCount << 3);
+	}
 }

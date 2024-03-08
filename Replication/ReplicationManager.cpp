@@ -60,8 +60,8 @@ void ReplicationManager::CloseReplicationPackage(OutputMemoryBitStream& outStrea
 {
 	if (outStream.GetBitLength() % 8 != 0)
 	{
-		ReplicationAction action = RA_Padding;
-		outStream.Serialize(action);
+		ReplicationHeader rh(RA_Padding);
+		rh.Write(outStream);
 	}
 }
 

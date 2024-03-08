@@ -7,7 +7,7 @@ void ReplicationHeader::Write(OutputMemoryBitStream& outStream)
 {
 	outStream.Serialize(action, NetworkUtilityLibrary::GetRequiredBits<RA_MAX>());
 
-	if (action == RA_RPC) return;
+	if (action == RA_RPC || action == RA_Padding) return;
 
 	outStream.Serialize(networkId);
 	if (action == RA_Create || action == RA_Update)
@@ -18,7 +18,7 @@ void ReplicationHeader::Read(InputMemoryBitStream& inStream)
 {
 	inStream.Serialize(action, NetworkUtilityLibrary::GetRequiredBits<RA_MAX>());
 
-	if (action == RA_RPC) return;
+	if (action == RA_RPC || action == RA_Padding) return;
 
 	inStream.Serialize(networkId);
 	if (action == RA_Create || action == RA_Update)
