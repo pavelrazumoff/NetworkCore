@@ -162,6 +162,7 @@
     <ClInclude Include="Replication\ReplicationHeader.h" />
     <ClInclude Include="Replication\ReplicationManager.h" />
     <ClInclude Include="Replication\ReplicationObject.h" />
+    <ClInclude Include="Replication\ReplicationValidation.h" />
     <ClInclude Include="Replication\RMIManager.h" />
     <ClInclude Include="Replication\RPCManager.h" />
     <ClInclude Include="Serialization\ByteSwap.h" />

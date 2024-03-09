@@ -4,6 +4,7 @@
 #include "Serialization/MemoryBitStream.h"
 
 class ObjectCreationRegistry;
+class IReplicationValidation;
 
 class NETWORKCORE_API ReplicationManager
 {
@@ -21,7 +22,8 @@ public:
 
 	void CloseReplicationPackage(OutputMemoryBitStream& outStream);
 
-	void ProcessReplicationAction(ObjectCreationRegistry* registry, InputMemoryBitStream& inStream);
+	void ProcessReplicationAction(ObjectCreationRegistry* registry, InputMemoryBitStream& inStream,
+		IReplicationValidation* validation = nullptr);
 
 	uint32_t GetNetworkIdForObject(IReplicationObject* obj) const;
 	IReplicationObject* GetObjectFromNetworkId(uint32_t networkId) const;

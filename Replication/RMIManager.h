@@ -20,7 +20,7 @@ private:
 	RMIManager();
 
 public:
-	using Method = std::function<void(void* instance, InputMemoryBitStream&)>;
+	using Method = std::function<void(IReplicationObject* instance, InputMemoryBitStream&)>;
 
 	static RMIManager& GetInstance();
 
@@ -30,12 +30,12 @@ public:
 	{
 		if (rmiTable.find(inRMIId) != rmiTable.end()) return;
 
-		rmiTable[inRMIId] = ([=](void* instance, InputMemoryBitStream& inStream) {
+		rmiTable[inRMIId] = ([=](IReplicationObject* instance, InputMemoryBitStream& inStream) {
 
 			std::tuple<Args...> args;
 			fill_tuple_from_stream(std::index_sequence_for<Args...>{}, args, inStream);
 			std::apply([method, instance](auto&&... args) {
-				return (reinterpret_cast<T*>(instance)->*method)(std::forward<decltype(args)>(args)...);
+				(dynamic_cast<T*>(instance)->*method)(std::forward<decltype(args)>(args)...);
 			}, args);
 		});
 	}

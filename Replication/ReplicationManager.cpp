@@ -8,6 +8,7 @@
 #include "ObjectCreationRegistry.h"
 
 #include "ReflectionSystem/DataType.h"
+#include "ReplicationValidation.h"
 
 #include "NetworkUtility.h"
 
@@ -65,12 +66,24 @@ void ReplicationManager::CloseReplicationPackage(OutputMemoryBitStream& outStrea
 	}
 }
 
-void ReplicationManager::ProcessReplicationAction(ObjectCreationRegistry* registry, InputMemoryBitStream& inStream)
+void ReplicationManager::ProcessReplicationAction(ObjectCreationRegistry* registry, InputMemoryBitStream& inStream,
+	IReplicationValidation* validation)
 {
 	if (!registry) { DebugNetworkTrap(); return; }
 
 	ReplicationHeader rh;
 	rh.Read(inStream);
+
+	// Check rh.networkId to actually belong to the instigator, that sent the package.
+	if (rh.action != RA_Padding)
+	{
+		if (validation &&
+			!validation->ValidateObjectOwnership(rh.networkId))
+		{
+			DebugNetworkTrap();
+			return;
+		}
+	}
 
 	switch (rh.action)
 	{
