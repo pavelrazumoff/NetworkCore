@@ -20,7 +20,7 @@ private:
 	RMIManager();
 
 public:
-	using Method = std::function<void(IReplicationObject* instance, InputMemoryBitStream&)>;
+	using Method = std::function<void(IReplicationObject*, InputMemoryBitStream&)>;
 
 	static RMIManager& GetInstance();
 

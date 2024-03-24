@@ -26,6 +26,7 @@ public:
 		IReplicationValidation* validation = nullptr);
 
 	uint32_t GetNetworkIdForObject(IReplicationObject* obj) const;
+	bool DoesObjectSupportReplication(IReplicationObject* obj) const;
 	IReplicationObject* GetObjectFromNetworkId(uint32_t networkId) const;
 
 private:

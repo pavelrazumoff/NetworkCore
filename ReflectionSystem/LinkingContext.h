@@ -29,6 +29,16 @@ public:
 		}
 	}
 
+	bool DoesNetworkIdExistForObject(IReplicationObject* inReplObject) const
+	{
+		auto it = std::find_if(networkIdToReplObjectMap.begin(), networkIdToReplObjectMap.end(),
+			[&inReplObject](const auto& pair) -> bool {
+				return pair.second == inReplObject;
+			});
+
+		return it != networkIdToReplObjectMap.end();
+	}
+
 	IReplicationObject* GetReplicationObject(uint32_t inNetworkId) const
 	{
 		auto it = networkIdToReplObjectMap.find(inNetworkId);

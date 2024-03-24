@@ -35,7 +35,7 @@ void ReplicationManager::ReplicateCreate(OutputMemoryBitStream& outStream, IRepl
 		replObject->GetClassId());
 
 	rh.Write(outStream);
-	replObject->Write(outStream);
+	replObject->WriteCreate(outStream);
 }
 
 void ReplicationManager::ReplicateUpdate(OutputMemoryBitStream& outStream, IReplicationObject* replObject)
@@ -114,7 +114,7 @@ void ReplicationManager::ProcessReplicationAction(ObjectCreationRegistry* regist
 					if (replObject)
 					{
 						replObject->Read(inStream);
-						replObject->SafeDestroy();
+						replObject->ReplDestroy();
 					}
 					else DebugNetworkTrap();
 				}
@@ -126,7 +126,7 @@ void ReplicationManager::ProcessReplicationAction(ObjectCreationRegistry* regist
 					linkingContext->GetReplicationObject(rh.networkId))
 				{
 					linkingContext->RemoveReplicationObject(replObject);
-					replObject->SafeDestroy();
+					replObject->ReplDestroy();
 				}
 			}
 			break;
@@ -159,6 +159,11 @@ void ReplicationManager::ProcessReplicationAction(ObjectCreationRegistry* regist
 uint32_t ReplicationManager::GetNetworkIdForObject(IReplicationObject* obj) const
 {
 	return linkingContext->GetNetworkId(obj);
+}
+
+bool ReplicationManager::DoesObjectSupportReplication(IReplicationObject* obj) const
+{
+	return linkingContext->DoesNetworkIdExistForObject(obj);
 }
 
 IReplicationObject* ReplicationManager::GetObjectFromNetworkId(uint32_t networkId) const

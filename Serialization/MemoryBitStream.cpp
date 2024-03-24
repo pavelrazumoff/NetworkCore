@@ -59,7 +59,8 @@ bool OutputMemoryBitStream::Serialize(std::string& str)
 {
 	uint32_t strBitLen = (uint32_t)str.length() << 3;
 	if (!Serialize(strBitLen)) return false;
-	if (!Serialize(&str.front(), strBitLen)) return false;
+	if ((strBitLen > 0) &&
+		!Serialize(&str.front(), strBitLen)) return false;
 
 	return true;
 }
@@ -99,7 +100,8 @@ bool InputMemoryBitStream::Serialize(std::string& str)
 	if (!Serialize(strBitLen)) return false;
 
 	str.resize(strBitLen >> 3);
-	if (!Serialize(&str.front(), strBitLen)) return false;
+	if ((strBitLen > 0) &&
+		!Serialize(&str.front(), strBitLen)) return false;
 
 	return true;
 }
