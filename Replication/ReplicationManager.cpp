@@ -28,24 +28,24 @@ ReplicationManager& ReplicationManager::GetInstance()
 	return instance;
 }
 
-void ReplicationManager::ReplicateCreate(OutputMemoryBitStream& outStream, IReplicationObject* replObject)
+void ReplicationManager::ReplicateCreate(OutputMemoryBitStream& outStream, IReplicationObject* replObject, ReplicationType clientReplType)
 {
 	ReplicationHeader rh(RA_Create,
 		linkingContext->GetNetworkId(replObject),
 		replObject->GetClassId());
 
 	rh.Write(outStream);
-	replObject->WriteCreate(outStream);
+	replObject->WriteCreate(outStream, clientReplType);
 }
 
-void ReplicationManager::ReplicateUpdate(OutputMemoryBitStream& outStream, IReplicationObject* replObject)
+bool ReplicationManager::ReplicateUpdate(OutputMemoryBitStream& outStream, IReplicationObject* replObject, ReplicationType clientReplType)
 {
 	ReplicationHeader rh(RA_Update,
 		linkingContext->GetNetworkId(replObject),
 		replObject->GetClassId());
 
 	rh.Write(outStream);
-	replObject->Write(outStream);
+	return replObject->WriteUpdate(outStream, clientReplType);
 }
 
 void ReplicationManager::ReplicateDestroy(OutputMemoryBitStream& outStream, IReplicationObject* replObject)
@@ -169,4 +169,9 @@ bool ReplicationManager::DoesObjectSupportReplication(IReplicationObject* obj) c
 IReplicationObject* ReplicationManager::GetObjectFromNetworkId(uint32_t networkId) const
 {
 	return linkingContext->GetReplicationObject(networkId);
+}
+
+void ReplicationManager::AssignNetworkIdForReplicationObject(IReplicationObject* inReplObject, uint32_t inNetworkId)
+{
+	linkingContext->AddReplicationObject(inReplObject, inNetworkId);
 }

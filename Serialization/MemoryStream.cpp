@@ -48,19 +48,7 @@ bool OutputMemoryStream::Serialize(std::string& ioStr)
 
 	return true;
 }
-/*
-bool OutputMemoryStream::Serialize(ChatCustomObject*& ioChatObject)
-{
-	if (!mLinkingContext)
-	{
-		// TODO: Handle error.
-		return false;
-	}
 
-	uint32_t networkId = mLinkingContext->GetNetworkId(ioChatObject);
-	return MemoryStream::Serialize(networkId);
-}
-*/
 // ---------------------------------------------------------------------------
 
 bool InputMemoryStream::Read(void* outData, uint32_t outByteCount)

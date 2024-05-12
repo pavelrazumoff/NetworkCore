@@ -65,6 +65,14 @@ bool OutputMemoryBitStream::Serialize(std::string& str)
 	return true;
 }
 
+bool OutputMemoryBitStream::Serialize(float& x, float& y)
+{
+	if (!Serialize(x) ||
+		!Serialize(y)) return false;
+
+	return true;
+}
+
 bool OutputMemoryBitStream::WriteBits(uint8_t inData, uint32_t inBitCount)
 {
 	uint32_t nextBitHead = mBitHead + static_cast<uint32_t>(inBitCount);
@@ -92,6 +100,27 @@ bool OutputMemoryBitStream::WriteBits(uint8_t inData, uint32_t inBitCount)
 	return true;
 }
 
+OutputMemoryBitStream& OutputMemoryBitStream::operator<<(const OutputMemoryBitStream& otherStream)
+{
+	uint32_t bitCapacity = otherStream.mBitHead;
+	if (mBitHead + bitCapacity > mBitCapacity)
+	{
+		ReallocBuffer(max(mBitCapacity * 2, mBitHead + bitCapacity));
+	}
+
+	int numBytes = (bitCapacity % 8) ? (bitCapacity >> 3) + 1 : bitCapacity >> 3;
+
+	char* tempBuffer = static_cast<char*>(std::malloc(numBytes));
+	if (tempBuffer) memcpy(tempBuffer, otherStream.GetBufferPtr(), numBytes);
+	else { DebugNetworkTrap(); return *this; }
+
+	Serialize(reinterpret_cast<void*>(tempBuffer), bitCapacity);
+
+	std::free(tempBuffer);
+
+	return *this;
+}
+
 // ---------------------------------------------------------------------------
 
 bool InputMemoryBitStream::Serialize(std::string& str)
@@ -102,6 +131,14 @@ bool InputMemoryBitStream::Serialize(std::string& str)
 	str.resize(strBitLen >> 3);
 	if ((strBitLen > 0) &&
 		!Serialize(&str.front(), strBitLen)) return false;
+
+	return true;
+}
+
+bool InputMemoryBitStream::Serialize(float& x, float& y)
+{
+	if (!Serialize(x) ||
+		!Serialize(y)) return false;
 
 	return true;
 }

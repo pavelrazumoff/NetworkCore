@@ -61,6 +61,7 @@ public:
 	}
 
 	virtual bool Serialize(std::string& str) = 0;
+	virtual bool Serialize(float& x, float& y) = 0;
 
 public:
 	virtual bool IsInput() const = 0;
@@ -94,8 +95,11 @@ public:
 	}
 
 	virtual bool Serialize(std::string& str) override;
+	virtual bool Serialize(float& x, float& y) override;
 
 	bool WriteBits(uint8_t inData, uint32_t inBitCount);
+
+	OutputMemoryBitStream& operator<<(const OutputMemoryBitStream& otherStream);
 
 public:
 	virtual bool IsInput() const override { return false; }
@@ -128,6 +132,7 @@ public:
 	}
 
 	virtual bool Serialize(std::string& str) override;
+	virtual bool Serialize(float& x, float& y) override;
 
 	bool ReadBits(uint8_t& outData, uint32_t inBitCount);
 

@@ -68,21 +68,15 @@ public:
 		return true;
 	}
 
-	//virtual bool Serialize(ChatCustomObject*& ioChatObject) = 0;
-
 	virtual bool IsInput() const = 0;
 
 public:
-	//void SetLinkingContext(LinkingContext* inLinkingContext) { mLinkingContext = inLinkingContext; }
-
 	bool ReallocBuffer(uint32_t inNewLength);
 
 protected:
 	char* mBuffer = nullptr;
 	uint32_t mHead = 0;
 	uint32_t mCapacity = 0;
-
-	//LinkingContext* mLinkingContext = nullptr;
 };
 
 class NETWORKCORE_API OutputMemoryStream : public MemoryStream
@@ -101,7 +95,6 @@ public:
 		return Write(ioData, inByteCount);
 	}
 	virtual bool Serialize(std::string& ioStr) override;
-	//virtual bool Serialize(ChatCustomObject*& ioChatObject) override;
 
 	virtual bool IsInput() const override { return false; }
 
@@ -141,7 +134,6 @@ public:
 		return Read(ioData, inByteCount);
 	}
 	virtual bool Serialize(std::string& ioStr) override;
-	//virtual bool Serialize(ChatCustomObject*& ioChatObject) override;
 
 	virtual bool IsInput() const override { return true; }
 
