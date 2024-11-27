@@ -34,7 +34,10 @@ public:
 	{
 		mName = other.mName;
 		mPrimitiveType = other.mPrimitiveType;
+		mPrimitiveSubType = other.mPrimitiveSubType;
 		mOffset = other.mOffset;
+		mReplCallback = other.mReplCallback;
+		mReplicationType = other.mReplicationType;
 	}
 
 	void SetPrimitiveSubType(EPrimitiveType inPrimitiveSubType)
